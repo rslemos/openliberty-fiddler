@@ -10,4 +10,21 @@
   <keyStore id="defaultKeyStore" password="Liberty" />
 
   <webApplication location="fiddler.war" contextRoot="/"/>
+
+  <messagingEngine>
+    <queue id="jms/MyQueue"/>
+  </messagingEngine>
+
+  <jmsQueue id="jndi/MyQueue" jndiName="jndi/MyQueue">
+    <properties.wasJms queueName="jms/MyQueue"/>
+  </jmsQueue>
+
+  <jmsQueueConnectionFactory jndiName="jms/ConnectionFactory" connectionManagerRef="jmsConnManager">
+    <properties.wasJms nonPersistentMapping="ExpressNonPersistent" persistentMapping="ReliablePersistent"/>
+  </jmsQueueConnectionFactory>
+  <connectionManager id="jmsConnManager" maxPoolSize="2"/>
+
+  <jmsActivationSpec id="fiddler/MyMessageDrivenBean">
+    <properties.wasJms destinationRef="jndi/MyQueue" />
+  </jmsActivationSpec>
 </server>
